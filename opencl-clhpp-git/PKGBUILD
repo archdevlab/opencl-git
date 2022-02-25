@@ -22,18 +22,18 @@ pkgname=opencl-clhpp-git
 pkgdesc='OpenCL C++ header files'
 pkgver=2.0.15.r6.g21a34b0
 pkgrel=1
-arch=('x86_64')
+arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-CLHPP'
-license=('Apache-2.0')
-makedepends=('cmake' 'doxygen' 'graphviz' 'ninja' 'git' 'clang' 'llvm' 'llvm-libs' 'gcc' 'gcc-libs' 'python')
-source=('OpenCL-CLHPP::git+https://github.com/KhronosGroup/OpenCL-CLHPP.git')
-md5sums=('SKIP')
-depends=('opencl-headers')
-conflicts=('opencl-clhpp')
-provides=('opencl-clhpp' 'opencl-clhpp-git')
+license=(Apache-2.0)
+makedepends=(cmake doxygen graphviz ninja git clang llvm llvm-libs gcc gcc-libs python)
+source=(OpenCL-CLHPP::git+https://github.com/KhronosGroup/OpenCL-CLHPP.git)
+md5sums=(SKIP)
+depends=(opencl-headers)
+conflicts=(opencl-clhpp)
+provides=(opencl-clhpp opencl-clhpp-git)
 
 pkgver(){
-  cd OpenCL-CLHPP
+  cd ${srcdir}/OpenCL-CLHPP
   
   # cutting off 'foo-' prefix that presents in the git tag
   #git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -41,6 +41,11 @@ pkgver(){
 
   #git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
   #git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare(){
+  cd ${srcdir}/OpenCL-CLHPP
+  git submodule update --init --recursive
 }
 
 build(){
@@ -55,7 +60,7 @@ else
   export CXX="g++"
 fi
 
-  cd OpenCL-CLHPP
+  cd ${srcdir}/OpenCL-CLHPP
 
   rm -rf build
 
@@ -71,7 +76,7 @@ fi
 }
 
 package(){
-  DESTDIR="$pkgdir" ninja -C OpenCL-CLHPP/build/ install
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/OpenCL-CLHPP/build/ install
 
   # installing docs
   install -dm755 "${pkgdir}"/usr/share/doc/$pkgname/
