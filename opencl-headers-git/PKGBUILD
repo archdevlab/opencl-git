@@ -11,7 +11,7 @@
 
 pkgname=opencl-headers-git
 pkgdesc='OpenCL (Open Computing Language) header files'
-pkgver=2021.06.30.r3.g835558e
+pkgver=2022.01.04.r3.gdcd5bed
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-Headers'

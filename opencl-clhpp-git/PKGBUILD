@@ -10,7 +10,7 @@
 
 pkgname=opencl-clhpp-git
 pkgdesc='OpenCL C++ header files'
-pkgver=2.0.15.r6.g21a34b0
+pkgver=2.0.16.r4.g61a5c9a
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-CLHPP'

@@ -47,8 +47,8 @@ build(){
 }
 
 package_ocl-icd-git(){
-  make DESTDIR="$pkgdir" ${srcdir}/ocl-icd/ install
+  make DESTDIR="$pkgdir" -C ${srcdir}/ocl-icd/ install
 
   # install licence
-  install -Dm644 ${srcdir}/ocl-icdCOPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  install -Dm644 ${srcdir}/ocl-icd/COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }

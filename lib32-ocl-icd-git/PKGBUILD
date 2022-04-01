@@ -13,7 +13,7 @@ pkgname=lib32-ocl-icd-git
 pkgdesc='OpenCL ICD Bindings (32-bit) (git version)'
 pkgver=2.3.1.r0.g1165dee
 pkgrel=1
-arch=(i686' 'x86_64)
+arch=(i686 x86_64)
 url='https://github.com/OCL-dev/ocl-icd'
 license=(Apache-2.0)
 makedpends=(ruby mesa xmlto xmltoman python-xmltodict asciidoc opencl-headers ninja make cmake git gcc gcc-libs lib32-mesa lib32-gcc-libs)
@@ -54,7 +54,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 }
 
 package_lib32-ocl-icd-git(){
-  make DESTDIR="$pkgdir" ${srcdir}/ocl-icd/ install
+  make DESTDIR="$pkgdir" -C ${srcdir}/ocl-icd/ install
 
   rm -rf "$pkgdir"/usr/{share,include}
 
