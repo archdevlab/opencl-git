@@ -1,0 +1,70 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <blacksky3@tuta.io> <https://github.com/blacksky3>
+#Credits: Gustavo Alvarez <sl1pkn07@gmail.com>
+
+pkgname=lib32-khronos-ocl-icd-git
+pkgdesc='Khronos Group OpenCL installable client driver (ICD) loader. (32-bit) (git version)'
+pkgver=2022.05.18.r2.g7072cf2
+pkgrel=1
+arch=(x86_64)
+url='https://github.com/KhronosGroup/OpenCL-ICD-Loader'
+license=(Apache-2.0)
+makedpends=(ruby mesa xmlto xmltoman python-xmltodict asciidoc opencl-headers ninja make cmake git gcc gcc-libs lib32-mesa lib32-gcc-libs)
+depends=(lib32-glibc)
+optdepends=('lib32-opencl-driver: packaged opencl driver')
+conflicts=(lib32-libcl lib32-ocl-icd lib32-ocl-icd-git)
+replaces=(lib32-libcl)
+provides=(lib32-opencl-icd-loader lib32-ocl-icd lib32-ocl-icd-git lib32-khronos-ocl-icd lib32-khronos-ocl-icd-git)
+source=(git+https://github.com/KhronosGroup/OpenCL-ICD-Loader.git)
+md5sums=(SKIP)
+
+pkgver(){
+  cd ${srcdir}/OpenCL-ICD-Loader
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare(){
+  # fix .cmake path
+  sed 's|${CMAKE_INSTALL_DATADIR}/cmake|${CMAKE_INSTALL_LIBDIR}/cmake|g' -i ${srcdir}/OpenCL-ICD-Loader/CMakeLists.txt
+}
+
+build(){
+export CC='gcc -m32'
+export CXX='g++ -m32'
+export ASFLAGS=--32
+export CFLAGS=-m32
+export CXXFLAGS=-m32
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+  cd ${srcdir}/OpenCL-ICD-Loader
+
+  rm -rf build
+
+  cmake -H. -G Ninja -Bbuild_32 \
+  -DCMAKE_C_FLAGS=-m32 \
+  -DCMAKE_CXX_FLAGS=-m32 \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DCMAKE_INSTALL_LIBDIR=lib32 \
+  -DBUILD_TESTING=ON \
+  -DOPENCL_ICD_LOADER_BUILD_TESTING=ON
+
+  ninja -C build_32
+}
+
+package(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/OpenCL-ICD-Loader/build_32/ install
+
+  # remove /usr/bin dir
+  rm -rf ${pkgdir}/usr/bin/
+
+  install -Dm644 ${srcdir}/OpenCL-ICD-Loader/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

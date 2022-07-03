@@ -1,0 +1,62 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <blacksky3@tuta.io> <https://github.com/blacksky3>
+#Credits: Gustavo Alvarez <sl1pkn07@gmail.com>
+
+pkgname=khronos-ocl-icd-git
+pkgdesc='Khronos Group OpenCL installable client driver (ICD) loader. (git version)'
+pkgver=2022.05.18.r2.g7072cf2
+pkgrel=1
+arch=(x86_64)
+url='https://github.com/KhronosGroup/OpenCL-ICD-Loader'
+license=(Apache-2.0)
+makedepends=(ruby mesa xmlto xmltoman python-xmltodict asciidoc opencl-headers ninja make cmake git gcc gcc-libs)
+depends=(glibc)
+optdepends=('opencl-driver: packaged opencl driver')
+conflicts=(libcl ocl-icd ocl-icd-git)
+replaces=(libcl)
+provides=(opencl-icd-loader ocl-icd ocl-icd-git khronos-ocl-icd khronos-ocl-icd-git)
+source=(git+https://github.com/KhronosGroup/OpenCL-ICD-Loader.git)
+md5sums=(SKIP)
+
+pkgver(){
+  cd ${srcdir}/OpenCL-ICD-Loader
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare(){
+  # fix .cmake path
+  sed 's|${CMAKE_INSTALL_DATADIR}/cmake|${CMAKE_INSTALL_LIBDIR}/cmake|g' -i ${srcdir}/OpenCL-ICD-Loader/CMakeLists.txt
+}
+
+build(){
+  cd ${srcdir}/OpenCL-ICD-Loader
+
+  rm -rf build
+
+  cmake -H. -G Ninja -Bbuild \
+  -DCMAKE_C_FLAGS=-m64 \
+  -DCMAKE_CXX_FLAGS=-m64 \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DBUILD_TESTING=ON \
+  -DOPENCL_ICD_LOADER_BUILD_TESTING=ON
+
+  ninja -C build
+}
+
+package(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/OpenCL-ICD-Loader/build/ install
+
+  # remove /usr/bin dir
+  rm -rf ${pkgdir}/usr/bin/
+
+  install -Dm644 ${srcdir}/OpenCL-ICD-Loader/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
