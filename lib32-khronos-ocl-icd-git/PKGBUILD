@@ -11,7 +11,7 @@
 pkgname=lib32-khronos-ocl-icd-git
 pkgdesc='Khronos Group OpenCL installable client driver (ICD) loader. (32-bit) (git version)'
 pkgver=2022.05.18.r2.g7072cf2
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-ICD-Loader'
 license=(Apache-2.0)
@@ -46,7 +46,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
   cd ${srcdir}/OpenCL-ICD-Loader
 
-  rm -rf build
+  rm -rf build_32
 
   cmake -H. -G Ninja -Bbuild_32 \
   -DCMAKE_C_FLAGS=-m32 \

@@ -11,7 +11,7 @@
 pkgname=khronos-ocl-icd-git
 pkgdesc='Khronos Group OpenCL installable client driver (ICD) loader. (git version)'
 pkgver=2022.05.18.r2.g7072cf2
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-ICD-Loader'
 license=(Apache-2.0)
