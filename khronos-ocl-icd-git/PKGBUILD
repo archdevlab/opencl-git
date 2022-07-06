@@ -20,7 +20,7 @@ depends=(glibc)
 optdepends=('opencl-driver: packaged opencl driver')
 conflicts=(libcl ocl-icd ocl-icd-git)
 replaces=(libcl)
-provides=(opencl-icd-loader ocl-icd ocl-icd-git khronos-ocl-icd khronos-ocl-icd-git)
+provides=(opencl-icd-loader ocl-icd khronos-ocl-icd khronos-ocl-icd-git)
 source=(git+https://github.com/KhronosGroup/OpenCL-ICD-Loader.git)
 md5sums=(SKIP)
 
