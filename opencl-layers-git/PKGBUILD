@@ -10,7 +10,7 @@
 pkgname=opencl-layers-git
 pkgdesc='A collection of OpenCL layers. (git version)'
 pkgver=r33.g39a4c58
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-Layers.git'
 license=(Apache-2.0)
