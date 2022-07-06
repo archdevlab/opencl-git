@@ -87,7 +87,7 @@ package_lib32-ocl-icd-amdgpu-pro(){
   provides=(lib32-opencl-icd-loader lib32-ocl-icd lib32-ocl-icd-amdgpu-pro)
 
   extract_deb "${srcdir}"/ocl-icd-libopencl1-amdgpu-pro_${major}-${minor}~${ubuntu_ver}_i386.deb
-  move_libdir "opt/amdgpu-pro/lib32/x86_64-linux-gnu" "usr/lib32"
+  move_libdir "opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
   move_copyright
 
   ln -s /usr/lib32/libOpenCL.so.1 "${pkgdir}/usr/lib32/libOpenCL.so"
