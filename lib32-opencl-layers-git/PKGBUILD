@@ -37,7 +37,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
   cd ${srcdir}/OpenCL-Layers
 
-  rm -rf build
+  rm -rf build_32
 
   cmake -H. -G Ninja -Bbuild_32 \
   -DCMAKE_C_FLAGS=-m32 \
