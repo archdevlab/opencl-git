@@ -19,6 +19,7 @@ pkgbase=amdgpu-pro-ocl-icd
 pkgname=(ocl-icd-amdgpu-pro lib32-ocl-icd-amdgpu-pro)
 pkgver=${major}_${minor}
 pkgrel=1
+arch=(x86_64)
 url='https://repo.radeon.com/amdgpu'
 license=(custom: multiple)
 makedepends=(wget)
