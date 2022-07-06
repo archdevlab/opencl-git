@@ -76,7 +76,7 @@ package_ocl-icd-amdgpu-pro(){
   ln -s /usr/lib/libOpenCL.so.1 "${pkgdir}/usr/lib/libOpenCL.so"
 }
 
-package_ocl-icd-amdgpu-pro(){
+package_lib32-ocl-icd-amdgpu-pro(){
   pkgdesc='AMD OpenCL ICD Loader library (32-bit)'
   arch=(i686 x86_64)
   depends=(lib32-glibc ocl-icd-amdgpu-pro=${major}_${minor}-${pkgrel})
