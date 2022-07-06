@@ -1,0 +1,62 @@
+# _     _            _        _          _____
+#| |__ | | __ _  ___| | _____| | ___   _|___ /
+#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
+#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
+#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
+#                                  |___/
+
+#Maintainer: blacksky3 <blacksky3@tuta.io> <https://github.com/blacksky3>
+
+pkgname=lib32-opencl-layers-git
+pkgdesc='A collection of OpenCL layers. (32-bit) (git version)'
+pkgver=r33.g39a4c58
+pkgrel=1
+arch=(x86_64)
+url='https://github.com/KhronosGroup/OpenCL-Layers.git'
+license=(Apache-2.0)
+makedepends=(opencl-headers lib32-ocl-icd ninja make cmake git gcc lib32-gcc-libs)
+depends=(lib32-glibc opencl-headers lib32-ocl-icd)
+provides=(lib32-opencl-layers lib32-opencl-layers-git)
+source=(git+https://github.com/KhronosGroup/OpenCL-Layers.git)
+md5sums=(SKIP)
+
+pkgver(){
+  cd ${srcdir}/OpenCL-Layers
+
+  # cutting off 'foo-' prefix that presents in the git tag
+  echo r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)
+}
+
+build(){
+export CC='gcc -m32'
+export CXX='g++ -m32'
+export ASFLAGS=--32
+export CFLAGS=-m32
+export CXXFLAGS=-m32
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+  cd ${srcdir}/OpenCL-Layers
+
+  rm -rf build
+
+  cmake -H. -G Ninja -Bbuild_32 \
+  -DCMAKE_C_FLAGS=-m32 \
+  -DCMAKE_CXX_FLAGS=-m32 \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DCMAKE_INSTALL_LIBDIR=lib32 \
+  -DOPENCL_LAYERS_BUILD_TESTING=ON \
+  -DBUILD_TESTING=ON \
+  -DLAYERS_BUILD_TESTS=ON
+
+  ninja -C build_32
+}
+
+package(){
+  DESTDIR="$pkgdir" ninja -C ${srcdir}/OpenCL-Layers/build_32/ install
+
+  # remove /usr/bin dir
+  rm -rf ${pkgdir}/usr/bin/
+
+  install -Dm644 ${srcdir}/OpenCL-Layers/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
