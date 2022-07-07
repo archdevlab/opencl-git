@@ -15,7 +15,7 @@ major=22.20
 minor=1438747
 ubuntu_ver=22.04
 
-pkgbase=amdgpu-pro-ocl-icd
+pkgbase=ocl-icd-amdgpu-pro
 pkgname=(ocl-icd-amdgpu-pro lib32-ocl-icd-amdgpu-pro)
 pkgver=${major}_${minor}
 pkgrel=1
