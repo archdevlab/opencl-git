@@ -24,7 +24,9 @@ url='https://repo.radeon.com/amdgpu'
 license=(custom: multiple)
 makedepends=(wget)
 source=(https://repo.radeon.com/amdgpu/${major}/ubuntu/pool/proprietary/o/ocl-icd-amdgpu-pro/ocl-icd-libopencl1-amdgpu-pro_${major}-${minor}~${ubuntu_ver}_amd64.deb
-        https://repo.radeon.com/amdgpu/${major}/ubuntu/pool/proprietary/o/ocl-icd-amdgpu-pro/ocl-icd-libopencl1-amdgpu-pro_${major}-${minor}~${ubuntu_ver}_i386.deb)
+        https://repo.radeon.com/amdgpu/${major}/ubuntu/pool/proprietary/o/ocl-icd-amdgpu-pro/ocl-icd-libopencl1-amdgpu-pro_${major}-${minor}~${ubuntu_ver}_i386.deb
+        https://repo.radeon.com/amdgpu/${major}/ubuntu/pool/proprietary/o/ocl-icd-amdgpu-pro/ocl-icd-libopencl1-amdgpu-pro-dev_${major}-${minor}~${ubuntu_ver}_amd64.deb
+        https://repo.radeon.com/amdgpu/${major}/ubuntu/pool/proprietary/o/ocl-icd-amdgpu-pro/ocl-icd-libopencl1-amdgpu-pro-dev_${major}-${minor}~${ubuntu_ver}_i386.deb)
 
 # extracts a debian package
 # $1: deb file to extract
@@ -71,10 +73,14 @@ package_ocl-icd-amdgpu-pro(){
   provides=(opencl-icd-loader ocl-icd ocl-icd-amdgpu-pro)
 
   extract_deb "${srcdir}"/ocl-icd-libopencl1-amdgpu-pro_${major}-${minor}~${ubuntu_ver}_amd64.deb
+  extract_deb "${srcdir}"/ocl-icd-libopencl1-amdgpu-pro-dev_${major}-${minor}~${ubuntu_ver}_amd64.deb
   move_libdir "opt/amdgpu-pro/lib/x86_64-linux-gnu" "usr/lib"
   move_copyright
 
-  ln -s /usr/lib/libOpenCL.so.1 "${pkgdir}/usr/lib/libOpenCL.so"
+  sed -i "s#prefix=/opt/amdgpu-pro#prefix=/usr#g" "${pkgdir}"/usr/lib/pkgconfig/OpenCL.pc
+  sed -i "s#libdir=\${prefix}/lib/x86_64-linux-gnu#libdir=\${prefix}/lib#g" "${pkgdir}"/usr/lib/pkgconfig/OpenCL.pc
+  sed -i "s#L/opt/amdgpu-pro/lib/x86_64-linux-gnu#L/usr/lib#g" "${pkgdir}"/usr/lib/pkgconfig/OpenCL.pc
+  sed -i "s#-I/opt/amdgpu-pro/include#-I/usr/include#g" "${pkgdir}"/usr/lib/pkgconfig/OpenCL.pc
 }
 
 package_lib32-ocl-icd-amdgpu-pro(){
@@ -87,11 +93,17 @@ package_lib32-ocl-icd-amdgpu-pro(){
   provides=(lib32-opencl-icd-loader lib32-ocl-icd lib32-ocl-icd-amdgpu-pro)
 
   extract_deb "${srcdir}"/ocl-icd-libopencl1-amdgpu-pro_${major}-${minor}~${ubuntu_ver}_i386.deb
+  extract_deb "${srcdir}"/ocl-icd-libopencl1-amdgpu-pro-dev_${major}-${minor}~${ubuntu_ver}_i386.deb
   move_libdir "opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
   move_copyright
 
-  ln -s /usr/lib32/libOpenCL.so.1 "${pkgdir}/usr/lib32/libOpenCL.so"
+  sed -i "s#prefix=/opt/amdgpu-pro#prefix=/usr#g" "${pkgdir}"/usr/lib32/pkgconfig/OpenCL.pc
+  sed -i "s#libdir=\${prefix}/lib/x86_64-linux-gnu#libdir=\${prefix}/lib32#g" "${pkgdir}"/usr/lib32/pkgconfig/OpenCL.pc
+  sed -i "s#L/opt/amdgpu-pro/lib/x86_64-linux-gnu#L/usr/lib32#g" "${pkgdir}"/usr/lib32/pkgconfig/OpenCL.pc
+  sed -i "s#-I/opt/amdgpu-pro/include#-I/usr/include#g" "${pkgdir}"/usr/lib32/pkgconfig/OpenCL.pc
 }
 
 sha256sums=('1f2fc0129594b8cae7a2692735ac768889eef472e19fb6a55035caeeb9ff97db'
-            '8fbfe7c3c446ee9864dc492ae6fc68128817046a72b30b8220a45b865890f18f')
+            '8fbfe7c3c446ee9864dc492ae6fc68128817046a72b30b8220a45b865890f18f'
+            'cbfddfce012ef922024289a5e84a44bbf20cc26c0c04d501cc54f13c9a553c2e'
+            '7857150fa764cd0b476cf0da4d1e8b52b66f34a4c48a4939c9751bba849a695d')
