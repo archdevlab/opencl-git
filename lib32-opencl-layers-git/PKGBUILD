@@ -9,13 +9,13 @@
 
 pkgname=lib32-opencl-layers-git
 pkgdesc='A collection of OpenCL layers. (32-bit) (git version)'
-pkgver=r33.g39a4c58
+pkgver=r34.g1d78090
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-Layers.git'
 license=(Apache-2.0)
-makedepends=(opencl-headers lib32-ocl-icd ninja make cmake git gcc lib32-gcc-libs)
-depends=(lib32-glibc opencl-headers lib32-ocl-icd lib32-opencl-icd-loader)
+makedepends=(opencl-headers lib32-khronos-ocl-icd-git ninja make cmake git gcc lib32-gcc-libs)
+depends=(lib32-glibc opencl-headers lib32-khronos-ocl-icd-git lib32-opencl-icd-loader)
 provides=(lib32-opencl-layers lib32-opencl-layers-git)
 source=(git+https://github.com/KhronosGroup/OpenCL-Layers.git)
 md5sums=(SKIP)

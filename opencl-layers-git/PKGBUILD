@@ -9,13 +9,13 @@
 
 pkgname=opencl-layers-git
 pkgdesc='A collection of OpenCL layers. (git version)'
-pkgver=r33.g39a4c58
+pkgver=r34.g1d78090
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/KhronosGroup/OpenCL-Layers.git'
 license=(Apache-2.0)
-makedepends=(opencl-headers ocl-icd ninja make cmake git gcc gcc-libs)
-depends=(glibc opencl-headers ocl-icd opencl-icd-loader)
+makedepends=(opencl-headers khronos-ocl-icd-git ninja make cmake git gcc gcc-libs)
+depends=(glibc opencl-headers khronos-ocl-icd-git opencl-icd-loader)
 provides=(opencl-layers opencl-layers-git)
 source=(git+https://github.com/KhronosGroup/OpenCL-Layers.git)
 md5sums=(SKIP)
