@@ -52,7 +52,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 package_lib32-ocl-icd-git(){
   make DESTDIR="$pkgdir" -C ${srcdir}/ocl-icd/ install
 
-  rm -rf "$pkgdir"/usr/{share,include}
+  rm -rf "$pkgdir"/usr/{bin,share,include}
 
   # install licence
   install -Dm644 ${srcdir}/ocl-icd/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
