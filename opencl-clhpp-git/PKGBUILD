@@ -48,7 +48,7 @@ package(){
 
   # installing docs
   install -dm755 "${pkgdir}"/usr/share/doc/"${pkgname}"/
-  cp -r "${srcdir}"/OpenCL-CLHPP/build/docs/html/* "${pkgdir}"/usr/share/doc/"${pkgname}"/
+  cp -r "${srcdir}"/build/docs/html/* "${pkgdir}"/usr/share/doc/"${pkgname}"/
 
   # install license
   install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
