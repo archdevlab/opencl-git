@@ -2,7 +2,7 @@
 #Credits: Laurent Carlier <lordheavym@gmail.com>
 
 pkgname=opencl-clhpp-git
-pkgdesc='OpenCL C++ header files'
+pkgdesc='OpenCL C++ header files (git version)'
 pkgver=2.0.16.r4.g61a5c9a
 pkgrel=1
 arch=(any)
