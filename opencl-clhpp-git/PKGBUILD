@@ -1,62 +1,60 @@
-# _     _            _        _          _____
-#| |__ | | __ _  ___| | _____| | ___   _|___ /
-#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
-#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
-#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
-#                                  |___/
-
-#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Maintainer: archdevlab <https://github.com/archdevlab>
 #Credits: Laurent Carlier <lordheavym@gmail.com>
 
 pkgname=opencl-clhpp-git
 pkgdesc='OpenCL C++ header files'
 pkgver=2.0.16.r4.g61a5c9a
 pkgrel=1
-arch=(x86_64)
+arch=(any)
 url='https://github.com/KhronosGroup/OpenCL-CLHPP'
 license=(Apache-2.0)
-makedepends=(cmake doxygen graphviz ninja git gcc gcc-libs python ruby)
+makedepends=(cmake doxygen graphviz opencl-headers make git)
 depends=(opencl-headers)
 conflicts=(opencl-clhpp)
 provides=(opencl-clhpp opencl-clhpp-git)
 source=(git+https://github.com/KhronosGroup/OpenCL-CLHPP.git)
-md5sums=(SKIP)
 
 pkgver(){
-  cd ${srcdir}/OpenCL-CLHPP
-
+  cd "${srcdir}"/OpenCL-CLHPP
   # cutting off 'foo-' prefix that presents in the git tag
   git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare(){
-  cd ${srcdir}/OpenCL-CLHPP
+  cd "${srcdir}"/OpenCL-CLHPP
   git submodule update --init --recursive
 }
 
 build(){
-  cd ${srcdir}/OpenCL-CLHPP
+  rm -rf "${srcdir}"/build
 
-  rm -rf build
+  cmake -B "${srcdir}"/build -S "${srcdir}"/OpenCL-CLHPP \
+  -G "Unix Makefiles" \
+  -D CMAKE_BUILD_TYPE=Release \
+  -D CMAKE_INSTALL_PREFIX=/usr \
+  -D CMAKE_INSTALL_LIBDIR=lib \
+  -D CMAKE_INSTALL_SYSCONFDIR=/etc \
+  -D CMAKE_INSTALL_DATADIR=/share \
+  -D BUILD_DOCS=ON \
+  -D BUILD_EXAMPLES=OFF \
+  -D BUILD_TESTS=OFF \
+  -Wno-dev
 
-  cmake -H. -G Ninja -Bbuild \
-  -DCMAKE_C_FLAGS=-m64 \
-  -DCMAKE_CXX_FLAGS=-m64 \
-  -DCMAKE_INSTALL_PREFIX=/usr \
-  -DBUILD_DOCS=ON \
-  -DBUILD_EXAMPLES=OFF \
-  -DBUILD_TESTS=OFF
-
-  ninja -C build docs
+  make -j$(nproc) -C "${srcdir}"/build
 }
 
 package(){
-  DESTDIR="$pkgdir" ninja -C ${srcdir}/OpenCL-CLHPP/build/ install
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
 
   # installing docs
-  install -dm755 "${pkgdir}"/usr/share/doc/$pkgname/
-  cp -r OpenCL-CLHPP/build/docs/html/* "${pkgdir}"/usr/share/doc/$pkgname/
+  install -dm755 "${pkgdir}"/usr/share/doc/"${pkgname}"/
+  cp -r "${srcdir}"/OpenCL-CLHPP/build/docs/html/* "${pkgdir}"/usr/share/doc/"${pkgname}"/
 
-  # install licence
-  install -Dm644 "${srcdir}"/OpenCL-CLHPP/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/OpenCL-CLHPP/LICENSE.txt "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:

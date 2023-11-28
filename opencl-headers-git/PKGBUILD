@@ -1,11 +1,4 @@
-# _     _            _        _          _____
-#| |__ | | __ _  ___| | _____| | ___   _|___ /
-#| '_ \| |/ _` |/ __| |/ / __| |/ / | | | |_ \
-#| |_) | | (_| | (__|   <\__ \   <| |_| |___) |
-#|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
-#                                  |___/
-
-#Maintainer: blacksky3 <https://github.com/blacksky3>
+#Maintainer: archdevlab <https://github.com/archdevlab>
 #Credits: Stéphane Gaudreault <stephane@archlinux.org>
 #Credits: Sylvain HENRY <hsyl20@yahoo.fr>
 
@@ -13,39 +6,44 @@ pkgname=opencl-headers-git
 pkgdesc='OpenCL (Open Computing Language) header files'
 pkgver=2022.01.04.r3.gdcd5bed
 pkgrel=1
-arch=(x86_64)
+arch=(any)
 url='https://github.com/KhronosGroup/OpenCL-Headers'
 license=(Apache-2.0)
-makedends=(git cmake make ninja gcc gcc-libs)
+makedends=(cmake make python git)
 conflicts=(opencl-headers)
 provides=(opencl-headers opencl-headers-git)
 optdepends=('opencl-clhpp: C++ support')
 source=(git+https://github.com/KhronosGroup/OpenCL-Headers.git)
-md5sums=(SKIP)
 
 pkgver(){
-  cd ${srcdir}/OpenCL-Headers
-
+  cd "${srcdir}"/OpenCL-Headers
   # cutting off 'foo-' prefix that presents in the git tag
   git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build(){
-  cd ${srcdir}/OpenCL-Headers
+  rm -rf "${srcdir}"/build
 
-  rm -rf build
+  cmake -B "${srcdir}"/build -S "${srcdir}"/OpenCL-Headers \
+  -G "Unix Makefiles" \
+  -D CMAKE_BUILD_TYPE=Release \
+  -D CMAKE_INSTALL_PREFIX=/usr \
+  -D CMAKE_INSTALL_LIBDIR=lib \
+  -D CMAKE_INSTALL_SYSCONFDIR=/etc \
+  -D CMAKE_INSTALL_DATADIR=/share \
+  -Wno-dev
 
-  cmake -H. -G Ninja -Bbuild \
-  -DCMAKE_C_FLAGS=-m64 \
-  -DCMAKE_CXX_FLAGS=-m64 \
-  -DCMAKE_INSTALL_PREFIX=/usr
-
-  ninja -C build
+  make -j$(nproc) -C "${srcdir}"/build
 }
 
 package() {
-  DESTDIR="$pkgdir" ninja -C OpenCL-Headers/build/ install
+  make -j$(nproc) -C "${srcdir}"/build DESTDIR="${pkgdir}" install
 
-  # install licence
-  install -Dm644 "${srcdir}"/OpenCL-Headers/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  # install license
+  install -dm755 "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  install -m644 "${srcdir}"/OpenCL-Headers/LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
+
+sha256sums=(SKIP)
+
+# vim:set ts=8 sts=2 sw=2 et:
