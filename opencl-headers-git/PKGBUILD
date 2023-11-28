@@ -3,7 +3,7 @@
 #Credits: Sylvain HENRY <hsyl20@yahoo.fr>
 
 pkgname=opencl-headers-git
-pkgdesc='OpenCL (Open Computing Language) header files'
+pkgdesc='OpenCL (Open Computing Language) header files (git version)'
 pkgver=2022.01.04.r3.gdcd5bed
 pkgrel=1
 arch=(any)
